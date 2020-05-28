@@ -7,24 +7,6 @@ May-28-2020
 
 from ortools.sat.python import cp_model
 
-def co1():
-    model = cp_model.CpModel()
-    
-    x = model.NewIntVar(0, 25,'x')
-    y = model.NewIntVar(0, 7,'y')
-    z = model.NewIntVar(0, 16,'z')
-    
-    model.Add(2*x+ 7*y+3*z<=50)
-    model.Add(3*x - 5*y + 7*z <= 45)
-    model.Add(5*x + 2*y - 6*z <= 37)
-    
-    model.Maximize(2*x+2*y+3*z)
-    
-    solver = cp_model.CpSolver()
-    status = solver.Solve(model)
-    if status == cp_model.OPTIMAL:
-        print('x = %i, y = %i, z = %i' %(solver.Value(x),solver.Value(y),solver.Value(z)))
-
 class VarArraySolutionPrinter(cp_model.CpSolverSolutionCallback):
     """Print intermediate solutions."""
 
@@ -42,9 +24,28 @@ class VarArraySolutionPrinter(cp_model.CpSolverSolutionCallback):
     def solution_count(self):
         return self.__solution_count
     
-def crypuzzles():
     
-    solution_count = 0
+def co1():
+    model = cp_model.CpModel()
+    
+    x = model.NewIntVar(0, 25,'x')
+    y = model.NewIntVar(0, 7, 'y')
+    z = model.NewIntVar(0, 16,'z')
+    
+    model.Add(2*x+ 7*y+3*z<=50)
+    model.Add(3*x - 5*y + 7*z <= 45)
+    model.Add(5*x + 2*y - 6*z <= 37)
+    
+    model.Maximize(2*x+2*y+3*z)
+    
+    solver = cp_model.CpSolver()
+    status = solver.Solve(model)
+    if status == cp_model.OPTIMAL:
+        print('x = %i, y = %i, z = %i' %(solver.Value(x),solver.Value(y),solver.Value(z)))
+
+
+    
+def crypuzzles():
     
     model = cp_model.CpModel()
     
@@ -65,7 +66,10 @@ def crypuzzles():
     
     solver = cp_model.CpSolver()
     solution = VarArraySolutionPrinter(viarables)
-    status = solver.SearchForAllSolutions(model, solution)
+    solver.SearchForAllSolutions(model, solution)
+    
+    print("Total number solution: %i" %(solution.solution_count()))
+    print('wall time:%f s' % solver.WallTime() )
     
 crypuzzles()
     
